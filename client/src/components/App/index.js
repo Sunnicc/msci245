@@ -1,98 +1,169 @@
-import React, { Component } from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-} from 'react-router-dom';
+import * as React from 'react';
 
-import Home from '../Home';
-import PrivateRoute from '../Navigation/PrivateRoute.js';
+const App = () => {
 
-const title = 'React';
-
-const welcome = {
-  greeting:'Hey',
-  title: 'React',
-}
-
-function getTitle(title){
-  return title;
-}
-
-const list = [
-  {
-    title: 'React',
-    url: 'https://reactjs.org/',
-    author: 'Jordan Walke',
-    num_comments: 3,
-    points: 4,
-    objectID: 0,
-  }, 
-  {
-    title: 'Redux',
-    url: 'https://redux.js.org/',
-    author: 'Dan Abramov, Andrew Clark',
-    num_comments: 2,
-    points: 5,
-    objectID: 1,
+  const initialRecipes = [
+    {
+      title: 'Fruit salad',
+      difficulty: '2',
+      ingredients: ['apple', 'banana', 'blueberries', 'raisins', 'walnuts'],
+      calories: "200",
+      instructions: "Wash fresh fruit. Slice fruit into pieces. Mix all ingredients in a bowl.",
+      recipeID: 1,
+    }, {
+      title: 'Avocado wrap',
+      difficulty: '3',
+      ingredients: ['avocado', 'spinach', 'pine nuts', 'mayo', 'apple', 'tortilla bread'],
+      calories: "400",
+      instructions: "Wash all fruits and vegetables. Slice avocados and apples. Mix all ingredients and wrap them in a tortilla bread.",
+      recipeID: 2
     },
-];
+  ];
 
+  const [selectedRecipesList, setSelectedRecipesList] = React.useState([]);
+  const [recipes, setRecipes] = React.useState(initialRecipes);
+  const [editedItem, setEditedItem] = React.useState('');
 
-class App extends Component {
-  constructor(props) {
-    super(props);
+  const handleToggleIngredients = (item) => {
+    if (selectedRecipesList.includes(item.recipeID)) {
+      var index = selectedRecipesList.indexOf(item.recipeID);
+      var selectedRecipesListCopy = [...selectedRecipesList];
+      selectedRecipesListCopy.splice(index, 1);
+      setSelectedRecipesList(selectedRecipesListCopy);
+      console.log('selectedRecipesList: ', selectedRecipesList);
 
-    this.state = {
-      //
-    };
+    } else {
+      var selectedRecipesListCopy = [...selectedRecipesList];
+      selectedRecipesListCopy.push(item.recipeID);
+      setSelectedRecipesList(selectedRecipesListCopy);
+      console.log('selectedRecipesList: ', selectedRecipesList);
+      //setSelectedRecipe(item.recipeID);
+    }
   }
 
-  componentDidMount() {
-    //
+  const handleEditInstructions = (item) => {
+    setEditedItem(item.recipeID);
+  }
+
+  const handleUpdateInstructions = (index, instructions) => {
+    console.log("ID: ", index);
+    var recipesCopy = recipes;
+    recipesCopy[index].instructions = instructions;
+    setRecipes(recipesCopy);
+    setEditedItem('');
   }
 
 
-  componentWillUnmount() {
-    this.listener();
-  }
 
-
-  render() {
-    return (
-	  <Router>
-	    <div>
-        {/*<h1>
-        1 {welcome.greeting} {welcome.title}
-        </h1>
-
-        <h1>
-          2 {getTitle('React')}
-        </h1>
-
-        <h1>3 Hello world {title}</h1>  */}
-        <ul>
-          {list.map(function(item){
-            return <li>{item.title}</li>;
-          })}
-        </ul>
-        
-        <Search />
-        
-        <PrivateRoute exact path="/" component={Home}/> 
-	    </div>
-	  </Router>
-    );
-  }
-}
-
-function Search(){
-  return(
+  return (
     <div>
-      <label htmlFor='search'>Search :</label>
-      <input id ='search' type='text'/>
+      <h1>
+        Recipe finder
+      </h1>
+
+
+      <List
+        list={recipes}
+        selectedRecipesList={selectedRecipesList}
+        onToggleIngredients={handleToggleIngredients}
+        onEditInstructions={handleEditInstructions}
+        onUpdateInstructions={handleUpdateInstructions}
+        editedItem={editedItem}
+      />
+
     </div>
   );
 }
+
+
+
+const List = ({ list, selectedRecipesList, onToggleIngredients, onEditInstructions, onUpdateInstructions, editedItem }) => {
+  return (
+    <ul>
+      {list.map((item, index) => {
+        return (
+          <Item
+            item={item}
+            index={index}
+            selectedRecipesList={selectedRecipesList}
+            onToggleIngredients={onToggleIngredients}
+            onEditInstructions={onEditInstructions}
+            onUpdateInstructions={onUpdateInstructions}
+            editedItem={editedItem}
+          />
+        );
+      })}
+    </ul>
+
+  )
+}
+
+const Item = ({ item, selectedRecipesList, onToggleIngredients, onEditInstructions, onUpdateInstructions, editedItem, index }) => {
+  const [instructions, setInstructions] = React.useState(item.instructions);
+
+  const onChangeInstructions = (event) => {
+    setInstructions(event.target.value);
+    //console.log(instructions);
+  }
+
+  const onApplyChanges = () => {
+    onUpdateInstructions(index, instructions);
+  }
+
+  return (
+    <li>
+      <p> {"Title: " + item.title}</p>
+      <p> {"Difficulty: " + item.difficulty}</p>
+      {selectedRecipesList.includes(item.recipeID) && (
+        <>
+          <p>Ingredients: </p>
+          <ul>
+            {item.ingredients.map((ingredient) => (<li>{ingredient}</li>))}
+          </ul>
+
+        </>
+      )}
+
+      <p>
+        <Button
+          item={item}
+          label={selectedRecipesList.includes(item.recipeID) ? 'Hide ingredients' : 'Show ingredients'}
+          onButtonClick={onToggleIngredients}
+        />
+      </p>
+
+      <p>
+        Instructions:
+        {editedItem != item.recipeID ? (
+          <>
+            {item.instructions}
+            <Button
+              item={item}
+              label={'Edit instruction'}
+              onButtonClick={onEditInstructions}
+            />
+          </>
+        ) : (
+          <>
+            <input id='edit' type='text' size='80' onChange={onChangeInstructions} value={instructions} />
+            <Button
+              item={item}
+              label={'Save'}
+              onButtonClick={onApplyChanges}
+            />
+          </>
+        )}
+      </p>
+      <p>{"Calories: " + item.calories}</p>
+    </li>
+  )
+}
+
+const Button = ({ item, label, onButtonClick }) => (
+  <button type="button" onClick={(event) => onButtonClick(item, event)}>
+    {label}
+  </button>
+)
+
 
 export default App;

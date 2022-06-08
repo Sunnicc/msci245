@@ -6,7 +6,7 @@ import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-
+import Select from '@material-ui/core/Select'
 
 //Dev mode
 const serverURL = ""; //enable for dev mode
@@ -135,7 +135,7 @@ class Home extends Component {
           >
             {this.state.mode === 0 ? (
               <React.Fragment>
-                Welcome to MSci245!
+                Review a movie!
               </React.Fragment>
             ) : (
               <React.Fragment>
