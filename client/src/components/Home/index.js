@@ -64,8 +64,8 @@ const Review = () => {
 
   
 
-  const loadUserSettings=(userID,mode)=> {
-    callApiLoadUserSettings()
+  const loadUserSettings=(userID)=> {
+    callApiLoadUserSettings(userID)
       .then(res => {
         //console.log("loadUserSettings returned: ", res)
         var parsed = JSON.parse(res.express);
