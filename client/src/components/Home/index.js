@@ -64,7 +64,7 @@ const Review = () => {
 
   
 
-  const loadUserSettings=()=> {
+  const loadUserSettings=(userID,mode)=> {
     callApiLoadUserSettings()
       .then(res => {
         //console.log("loadUserSettings returned: ", res)
@@ -74,7 +74,7 @@ const Review = () => {
       });
   }
 
-  const callApiLoadUserSettings = async () => {
+  const callApiLoadUserSettings = async (userID) => {
     const url = serverURL + "/api/loadUserSettings";
 
     const response = await fetch(url, {
