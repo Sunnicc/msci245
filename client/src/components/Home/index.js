@@ -129,6 +129,12 @@ const Review = () => {
       const reviewID = reviewData.length+1;
       const newList = reviewData.concat({selectedMovie, enteredTitle,enteredReview, selectedRating, reviewID });
       setReviewData(newList);
+
+      setReviewData(newList);
+      setSelectedMovie('');
+      setEnteredTitle('');
+      setEnteredReview('');
+      setSelectedRating('');
        
       
     }
