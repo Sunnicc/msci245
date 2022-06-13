@@ -56,30 +56,25 @@ const MyPaper = styled(Paper)(({ theme }) => ({
 
 const Review = () => {
 
-  constructor=(props)=> {
-    super(props);
-    this.state = {
-      userID: 1,
-      mode: 0
-    }
-  };
-
-  componentDidMount= ()=> {
-    //this.loadUserSettings();
-  }
 
 
-  loadUserSettings=()=> {
-    this.callApiLoadUserSettings()
+  const [userID,setUserID]= React.useState(1);
+  const [mode,setMode]= React.useState(0);
+
+
+  
+
+  const loadUserSettings=()=> {
+    callApiLoadUserSettings()
       .then(res => {
         //console.log("loadUserSettings returned: ", res)
         var parsed = JSON.parse(res.express);
-        console.log("loadUserSettings parsed: ", parsed[0].mode)
-        this.setState({ mode: parsed[0].mode });
+        console.log("loadUserSettings parsed: ", parsed[0])
+        setMode( parsed[0]);
       });
   }
 
-  callApiLoadUserSettings = async () => {
+  const callApiLoadUserSettings = async () => {
     const url = serverURL + "/api/loadUserSettings";
 
     const response = await fetch(url, {
@@ -89,7 +84,7 @@ const Review = () => {
         //authorization: `Bearer ${this.state.token}`
       },
       body: JSON.stringify({
-        userID: this.state.userID
+        userID: userID
       })
     });
     const body = await response.json();
