@@ -4,8 +4,6 @@ import * as React from 'react';
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import { createTheme, ThemeProvider, styled } from '@material-ui/core/styles';
-import purple from '@material-ui/core/colors/purple';
-
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
@@ -16,6 +14,7 @@ import Box from '@mui/material/Box';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import InputLabel from '@mui/material/InputLabel';
+import { textAlign } from '@mui/system';
 
 
 const serverURL = "http://ov-research-4.uwaterloo.ca:3105";
@@ -30,6 +29,8 @@ const theme = createTheme({
       primary: {
         main: '#dcedc8',
         darker: '#9aa58c',
+        backgroundColor: '#f0f4c3',
+        textAlign:'center'
       },
       neutral: {
         main: '#81c784',
@@ -39,12 +40,12 @@ const theme = createTheme({
 });
 
 const Design = styled(Paper)(({ theme }) => ({
+  color: 'darkslategray',
   backgroundColor: '#fff',
-  textAlign: 'center',
-  color: theme.palette.text.primary,
   padding: 8,
+  borderRadius: 4,
+  textAlign: 'center',
 }));
-
 const ReviewPaper = styled(Paper)(({ theme }) => ({
   color: 'darkslategray',
   backgroundColor: '#dcedc8',
@@ -53,7 +54,12 @@ const ReviewPaper = styled(Paper)(({ theme }) => ({
   
 }));
 
+
+
+
+
 const Review = () => {
+
   const [userID,setUserID]= React.useState(1);
   const [mode,setMode]= React.useState(0);
 
@@ -86,9 +92,9 @@ const Review = () => {
     return body;
   }
 
-  const initialReviews = [ ];
-  const [reviewData, setReviewData] = React.useState(initialReviews);
+  const [reviewData, setReviewData] = React.useState([]);
 
+  
   const [selectedMovie, setSelectedMovie] = React.useState('');
   const handleMovieSelect = (event) => {
     setSelectedMovie(event.target.value);
@@ -98,6 +104,7 @@ const Review = () => {
   const handleTitle = (event) => {
     setEnteredTitle(event.target.value);
   };
+  
 
   const [enteredReview, setEnteredReview] = React.useState('');
   const handleReview = (event) => {
@@ -108,30 +115,44 @@ const Review = () => {
   const handleRating = (event) => {
     setSelectedRating(event.target.value);
   };
-  
-  const onButtonClick = () =>{
-    if(enteredTitle == '') {
-      alert("Please enter your review title")
-    } else if (enteredReview == ''){
-      alert("Please enter your review")
-    } else if (selectedRating == ''){
-      alert( "Please select the rating")
-    } else{
-      alert("Your review has been received");
 
+  const [v0, setV0] = React.useState('');
+  const [v1, setV1] = React.useState('');
+  const [v2, setV2] = React.useState('');
+  const [v3, setV3] = React.useState('');
+  const [v4, setV4] = React.useState('');
+
+  const onButtonClick = () =>{
+    if(selectedMovie == '') {
+      setV0("Please select the movie");
+    }
+    
+    if(enteredTitle == '') {
+      setV1("Please enter the title");
+    }
+    if(enteredReview == '') {
+      setV2("Please write the review");
+    } 
+    if(selectedRating == '') {
+      setV3("Please select the rating");
+    } 
+    else {
+      setV4("Your review has been received");
       const reviewID = reviewData.length+1;
       const newList = reviewData.concat({selectedMovie, enteredTitle,enteredReview, selectedRating, reviewID });
-      setReviewData(newList);
-
       setReviewData(newList);
       setSelectedMovie('');
       setEnteredTitle('');
       setEnteredReview('');
       setSelectedRating('');
-       
-      
-    }
+      setV0('');
+      setV1('');
+      setV2('');
+      setV3('');
+    } 
   };
+
+  
 
   const List = () => {
     return (
@@ -172,10 +193,10 @@ const Review = () => {
   }
 
 
+
   return (
     <ThemeProvider theme={theme.primary}>
       <div>
-
         <Grid item xs={8}>
           <Design>
             <Typography variant="h3" gutterBottom component="div">
@@ -186,23 +207,21 @@ const Review = () => {
 
         <Grid item xs={8}>
           <Design>
-
             <MovieSelection
             onMovieChange={handleMovieSelect}
             selectedMovie={selectedMovie}
             />
-
+            {v0}
           </Design>
         </Grid>
 
         <Grid item xs={8}>
           <Design>
-
           <ReviewTitle
               onReviewTitleChange={handleTitle}
               enteredTitle={enteredTitle}
             />
-            
+            {v1}
           </Design>
         </Grid>
         
@@ -213,33 +232,30 @@ const Review = () => {
               onReviewBodyChange={handleReview}
               enteredReview={enteredReview}
             />
-
+            {v2}
           </Design>
         </Grid>
 
         <Grid item xs={8}>
           <Design>
-
-
             <ReviewRating
               selectedRating= {selectedRating}
               onRatingChange = {handleRating}
             />
-
+            {v3}
           </Design>
         </Grid>
 
 
         <Grid item xs={8}>
-          
           <Design>
-    
-
           <Button variant="contained" 
               onClick= {(event)=> onButtonClick(event)}>
                 Submit
           </Button>
-
+          </Design>
+          <Design>
+            {v4}
           </Design>
         </Grid>
 
@@ -250,17 +266,16 @@ const Review = () => {
       </div>
 
     </ThemeProvider>
+
   );
 }
-
-
 
 
 const ReviewTitle= ({enteredTitle,onReviewTitleChange}) => {
   return(
     <div>
       <Typography variant="h5" gutterBottom component="div">
-          Write the title of review
+        Enter a title for the review
       </Typography>
 
       <TextField 
@@ -282,7 +297,7 @@ const ReviewBody= ({enteredReview,onReviewBodyChange}) => {
   return(
     <div>
       <Typography variant="h5" gutterBottom component="div">
-          Write the text of Review
+          Write a review
       </Typography>
 
       <TextField 
@@ -306,6 +321,10 @@ const ReviewBody= ({enteredReview,onReviewBodyChange}) => {
   )
 }
 
+
+
+
+
 const MovieSelection = ({onMovieChange,selectedMovie }) =>{
   return(
     <div>
@@ -315,7 +334,6 @@ const MovieSelection = ({onMovieChange,selectedMovie }) =>{
 
       <Box >
         <FormControl sx={{ m: 1, minWidth: 120 }}>
-          
           <Select
               labelId="demo-simple-select-autowidth-label"
               id="demo-simple-select-autowidth"
@@ -329,7 +347,6 @@ const MovieSelection = ({onMovieChange,selectedMovie }) =>{
                 <MenuItem value={"Doctor Strange"}>Doctor Strange</MenuItem>
                 <MenuItem value={"Iron Man"}>Iron Man</MenuItem>
           </Select> 
-
         </FormControl>
       </Box>
       
@@ -350,7 +367,7 @@ const ReviewRating = ({selectedRating, onRatingChange})=>{
   return(
     <div>
       <Typography variant="h5" gutterBottom component="div">
-          Select the rate for the movie
+          Select the rating
       </Typography>
 
       <FormControl>
