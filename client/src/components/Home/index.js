@@ -116,6 +116,8 @@ const Review = () => {
     setSelectedRating(event.target.value);
   };
 
+ 
+
   const [v0, setV0] = React.useState('');
   const [v1, setV1] = React.useState('');
   const [v2, setV2] = React.useState('');
@@ -125,18 +127,37 @@ const Review = () => {
   const onButtonClick = () =>{
     if(selectedMovie == '') {
       setV0("Please select the movie");
+      setV4('');
+    }
+    else{
+      setV0('');
     }
     
     if(enteredTitle == '') {
       setV1("Please enter the title");
+      setV4('');
     }
+    else{
+      setV1('');
+    }
+
     if(enteredReview == '') {
       setV2("Please write the review");
+      setV4('');
     } 
+    else{
+      setV2('');
+    }
+
     if(selectedRating == '') {
       setV3("Please select the rating");
+      setV4('');
     } 
-    else {
+    else{
+      setV3('');
+    }
+    
+    if(selectedMovie!=''&& enteredTitle != '' && enteredReview != '' && selectedRating != '') {
       setV4("Your review has been received");
       const reviewID = reviewData.length+1;
       const newList = reviewData.concat({selectedMovie, enteredTitle,enteredReview, selectedRating, reviewID });
@@ -150,6 +171,7 @@ const Review = () => {
       setV2('');
       setV3('');
     } 
+    
   };
 
   
