@@ -38,8 +38,6 @@ const theme = createTheme({
     },
 });
 
-
-
 const Design = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
   textAlign: 'center',
@@ -47,22 +45,17 @@ const Design = styled(Paper)(({ theme }) => ({
   padding: 8,
 }));
 
-const MyPaper = styled(Paper)(({ theme }) => ({
-    color: '#212121',
-    backgroundColor: '#dcedc8',
-    padding: 8,
-    borderRadius: 4,
-  }));
+const ReviewPaper = styled(Paper)(({ theme }) => ({
+  color: 'darkslategray',
+  backgroundColor: '#dcedc8',
+  padding: 8,
+  borderRadius: 4,
+  
+}));
 
 const Review = () => {
-
-
-
   const [userID,setUserID]= React.useState(1);
   const [mode,setMode]= React.useState(0);
-
-
-  
 
   const loadUserSettings=(userID)=> {
     callApiLoadUserSettings(userID)
