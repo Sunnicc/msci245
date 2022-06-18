@@ -140,48 +140,43 @@ const Review = () => {
     }
   };
 
-  const List = ({ list}) => {
+  const List = () => {
     return (
       <>
-        {list.map((item, index) => {
+      <hr/>
+      <ReviewPaper>
+        <Typography variant="h6" gutterBottom component="div">
+          Reviews
+        </Typography>
+      </ReviewPaper>
+        
+
+        {reviewData.map((item, index) => {
           return (
-            <Item
-              item={item}
-              index={index}
-            />
+            <ReviewPaper>
+              <Typography variant="h5" gutterTop component="div">
+                Movie Name:{item.selectedMovie}
+              </Typography>
+        
+              <Typography variant="h6" gutterBottom component="div">
+                Review Title: {item.enteredTitle}
+              </Typography>
+        
+              <Typography variant="h6" gutterBottom component="div">
+                Review: {item.enteredReview}
+              </Typography>
+        
+              <Typography variant="h6" gutterBottom component="div">
+                Rate: {item.selectedRating}
+              </Typography>
+        
+            </ReviewPaper>
           );
         })}
       </>
   
     )
   }
-  
-  
-  const Item = ({ item,  index }) => {
-  
-    return (
-      <MyPaper>
-        <Typography variant="h5" gutterTop component="div">
-          Movie Name:{item.selectedMovie}
-        </Typography>
-  
-        <Typography variant="h6" gutterBottom component="div">
-          Review Title: {item.enteredTitle}
-        </Typography>
-  
-        <Typography variant="h6" gutterBottom component="div">
-          Review: {item.enteredReview}
-        </Typography>
-  
-        <Typography variant="h6" gutterBottom component="div">
-          Rate: {item.selectedRating}
-        </Typography>
-  
-  
-      </MyPaper>
-    )
-  }
-
 
 
   return (
@@ -247,7 +242,7 @@ const Review = () => {
           <Design>
     
 
-          <Button variant="contained" color= "#dcedc8"
+          <Button variant="contained" 
               onClick= {(event)=> onButtonClick(event)}>
                 Submit
           </Button>
@@ -255,10 +250,10 @@ const Review = () => {
           </Design>
         </Grid>
 
-
-        {reviewData.length !=0 &&<List list={reviewData} />}
-
-
+        <Grid item xs={8}>
+          {reviewData.length !=0 &&<List />}
+        </Grid>
+        
       </div>
 
     </ThemeProvider>
