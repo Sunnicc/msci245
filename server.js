@@ -39,43 +39,26 @@ app.post('/api/loadUserSettings', (req, res) => {
 
 app.post('/api/getMovies', (req, res) => {
 	let connection = mysql.createConnection(config);
-	let data = [];
-	var errorsInTransaction = 0;
 
-	let userID = req.body.userID;
+	let sql = `SELECT * from  movies`;
 
-	connection.query(`START TRANSACTION`, data, (error, results, fields) => { //Start a transaction
+	//let data = [];
+
+	console.log(sql);
+	//console.log(data);
+
+	connection.query(sql, (error, results, fields) => {
 		if (error) {
-		console.log(error.message);
-		errorsInTransaction = errorsInTransaction + 1;
+			return console.error(error.message);
 		}
 
-		let loadMoviesSQL = 'SELECT (id, name, year, quality) FROM movies VALUES (?, ?, ?, ?)';
-		let loadMovieData = [req.body.id, req.body.name, req.body.year, req.body.quality];
+		console.log(results);
 
-
-		connection.query(loadMoviesSQL, loadMovieData, (error, results, fields) => {
-			if (error) {
-			console.log(error.message);
-			errorsInTransaction = errorsInTransaction + 1;
-			}
-			if (errorsInTransaction > 0) {
-			connection.query(`ROLLBACK`, dataEmpty, (error, results, fields) => { // Rollback transaction
-			res.send('Error');
-			connection.end();
-			});
-			} else {
-				connection.query(`COMMIT`, data, (error, results, fields) => { // Commit transaction
-				res.send({
-					express: string
-				});
-				connection.end();
-				});
-			}
-		});
+		let string = JSON.stringify(results);
+		res.send({ express: string });
 	});
+	connection.end();
 
 });
-
 app.listen(port, () => console.log(`Listening on port ${port}`)); //for the dev version
 //app.listen(port, '129.97.25.211'); //for the deployed version, specify the IP address of the server

@@ -247,7 +247,7 @@ const Review = () => {
             <MovieSelection
             onMovieChange={handleMovieSelect}
             selectedMovie={selectedMovie}
-            Movies={Movies}
+            movies={movies}
             />
 
           </Design>
@@ -348,7 +348,7 @@ const ReviewBody= ({enteredReview,onReviewBodyChange}) => {
       label="Review"
       multiline
       inputProps={{
-        maxlength: CHARACTER_LIMIT
+        maxLength: CHARACTER_LIMIT
       }}
       helperText={`${enteredReview.length}/${CHARACTER_LIMIT}`}
       value={enteredReview}
@@ -364,7 +364,7 @@ const ReviewBody= ({enteredReview,onReviewBodyChange}) => {
   )
 }
 
-const MovieSelection = ({Movies,onMovieChange,selectedMovie }) =>{
+const MovieSelection = ({movies,onMovieChange,selectedMovie }) =>{
   return(
     <div>
       <Typography variant="h5" gutterBottom component="div">
@@ -381,7 +381,7 @@ const MovieSelection = ({Movies,onMovieChange,selectedMovie }) =>{
               onChange={onMovieChange}
               autoWidth
               label = "Movie">
-                {Movies.map(movie => {
+                {movies.map(movie => {
               return(
                 <MenuItem key={movie.id} value={movie.id}>
                   {movie.name}
