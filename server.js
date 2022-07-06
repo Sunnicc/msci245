@@ -41,12 +41,9 @@ app.post('/api/getMovies', (req, res) => {
 	let connection = mysql.createConnection(config);
 
 	let sql = `SELECT id, name, year, quality FROM movies`;
-	let data = [];
-
 	console.log(sql);
-	console.log(data);
 
-	connection.query(sql, data, (error, results, fields) => {
+	connection.query(sql, (error, results, fields) => {
 		if (error) {
 			return console.error(error.message);
 		}
