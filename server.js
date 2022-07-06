@@ -40,21 +40,19 @@ app.post('/api/loadUserSettings', (req, res) => {
 app.post('/api/getMovies', (req, res) => {
 	let connection = mysql.createConnection(config);
 
-	let sql = `SELECT * from  ingredient`;
-
-	//let data = [];
+	let sql = `SELECT id, name, year, quality FROM movies`;
+	let data = [];
 
 	console.log(sql);
-	//console.log(data);
+	console.log(data);
 
-	connection.query(sql, (error, results, fields) => {
+	connection.query(sql, data, (error, results, fields) => {
 		if (error) {
 			return console.error(error.message);
 		}
-
 		console.log(results);
-
 		let string = JSON.stringify(results);
+		let obj = JSON.parse(string);
 		res.send({ express: string });
 	});
 	connection.end();

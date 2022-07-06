@@ -383,7 +383,7 @@ const MovieSelection = ({movies,onMovieChange,selectedMovie }) =>{
               label = "Movie">
                 {movies.map(movie => {
               return(
-                <MenuItem key={movie.ingredientID} value={movie.ingredientID}>
+                <MenuItem key={movie.id} value={movie.id}>
                   {movie.name}
                 </MenuItem>
               )})}
