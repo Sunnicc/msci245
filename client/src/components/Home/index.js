@@ -56,13 +56,8 @@ const MyPaper = styled(Paper)(({ theme }) => ({
 
 const Review = () => {
 
-
-
   const [userID,setUserID]= React.useState(1);
   const [mode,setMode]= React.useState(0);
-
-
-  
 
   const loadUserSettings=(userID)=> {
     callApiLoadUserSettings(userID)
@@ -95,6 +90,56 @@ const Review = () => {
 
   const initialReviews = [ ];
   const [reviewData, setReviewData] = React.useState(initialReviews);
+
+  const Movies =[
+    {
+      id:'1',
+      name:"hi"
+    },
+    {
+      id:'2',
+      name:"hello"
+    },
+    {
+      id:'3',
+      name:"bye"
+    },
+    {
+      id:'4',
+      name:"goodnight"
+    }
+  ];
+
+  const [movies, setMovies] =  React.useState([]);
+
+  React.useEffect(() => { getMovies(); }, []);
+
+  const getMovies = () => {
+      callApiGetMovies()
+        .then(res => {
+          console.log("callApiGetMovies returned: ", res)
+          var parsed = JSON.parse(res.express);
+          console.log("callApiGetMovies parsed: ", parsed);
+          setMovies(parsed);
+        })
+    }
+
+  const callApiGetMovies = async () => {
+    const url = serverURL + "/api/getMovies";
+    console.log(url);
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    console.log("User settings: ", body);
+    return body;
+  }
+
 
   const [selectedMovie, setSelectedMovie] = React.useState('');
   const handleMovieSelect = (event) => {
@@ -202,6 +247,7 @@ const Review = () => {
             <MovieSelection
             onMovieChange={handleMovieSelect}
             selectedMovie={selectedMovie}
+            Movies={Movies}
             />
 
           </Design>
@@ -318,7 +364,7 @@ const ReviewBody= ({enteredReview,onReviewBodyChange}) => {
   )
 }
 
-const MovieSelection = ({onMovieChange,selectedMovie }) =>{
+const MovieSelection = ({Movies,onMovieChange,selectedMovie }) =>{
   return(
     <div>
       <Typography variant="h5" gutterBottom component="div">
@@ -335,11 +381,12 @@ const MovieSelection = ({onMovieChange,selectedMovie }) =>{
               onChange={onMovieChange}
               autoWidth
               label = "Movie">
-                <MenuItem value={"Avengers: Endgame"}>Avengers: Endgame</MenuItem>
-                <MenuItem value={"Spider-Man: Far from Home"}>Spider-Man: Far from Home</MenuItem>
-                <MenuItem value={"Black Widow"}>Black Widow</MenuItem>
-                <MenuItem value={"Doctor Strange"}>Doctor Strange</MenuItem>
-                <MenuItem value={"Iron Man"}>Iron Man</MenuItem>
+                {Movies.map(movie => {
+              return(
+                <MenuItem key={movie.id} value={movie.id}>
+                  {movie.name}
+                </MenuItem>
+              )})}
           </Select> 
 
         </FormControl>
