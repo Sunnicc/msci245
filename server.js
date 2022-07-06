@@ -40,7 +40,7 @@ app.post('/api/loadUserSettings', (req, res) => {
 app.post('/api/getMovies', (req, res) => {
 	let connection = mysql.createConnection(config);
 
-	let sql = `SELECT * from  movies`;
+	let sql = `SELECT * from  ingredient`;
 
 	//let data = [];
 
