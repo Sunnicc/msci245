@@ -40,8 +40,6 @@ const theme = createTheme({
     },
 });
 
-
-
 const Design = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
   textAlign: 'center',
@@ -49,12 +47,11 @@ const Design = styled(Paper)(({ theme }) => ({
   padding: 8,
 }));
 
-
-
 const MyPaper = styled(Paper)(({ theme }) => ({
     color: '#212121',
     backgroundColor: '#dcedc8',
     padding: 8,
+    textAlign: 'center',
     borderRadius: 4,
   }));
 
@@ -157,13 +154,13 @@ const Review = () => {
     setSelectedRating(event.target.value);
   };
   
-  const reviewID = reviewData.length +1;
+
   const [v0, setV0] = React.useState('');
   const [v1, setV1] = React.useState('');
   const [v2, setV2] = React.useState('');
   const [v3, setV3] = React.useState('');
   const [v4, setV4] = React.useState('');
-  
+
   
   const onButtonClick = () =>{
 
@@ -171,39 +168,33 @@ const Review = () => {
       setV0("Please select the movie");
       setV4('');
     }
-    else{
-      setV0('');
-    }
+    else{ setV0(''); }
     
     if(enteredTitle == '') {
       setV1("Please enter the title");
       setV4('');
     }
-    else{
-      setV1('');
-    }
+    else{ setV1(''); }
 
     if(enteredReview == '') {
       setV2("Please write the review");
       setV4('');
     } 
-    else{
-      setV2('');
-    }
+    else{ setV2(''); }
 
     if(selectedRating == '') {
       setV3("Please select the rating");
       setV4('');
     } 
-    else{
-      setV3('');
-    }
+    else{ setV3(''); }
     
     if(selectedMovie!=''&& enteredTitle != '' && enteredReview != '' && selectedRating != '') {
       setV4("Your review has been received");
-      const reviewID = reviewData.length+1;
+      
       const newList = reviewData.concat({selectedMovie, enteredTitle,enteredReview, selectedRating, reviewID });
       setReviewData(newList);
+
+      const reviewID = reviewData.length+1;
 
       addReview();
       
@@ -241,7 +232,6 @@ const Review = () => {
         //authorization: `Bearer ${this.state.token}`
       },
       body: JSON.stringify({
-        reviewID: reviewID,
         userID: userID,
         selectedMovie: selectedMovie,
         enteredTitle: enteredTitle,
@@ -263,17 +253,9 @@ const Review = () => {
       <>
         {list.map((item) => {
           return (
-            <MyPaper>
-              <Typography variant="h5" gutterTop component="div">
-                Movie Name:{item.selectedMovie}
-              </Typography>
-        
-              <Typography variant="h6" gutterBottom component="div">
-                Review Title: {item.enteredTitle}
-                Review: {item.enteredReview}
-                Rate: {item.selectedRating}
-              </Typography>
-            </MyPaper>
+            <Item
+              item={item}
+            />
           );
         })}
       </>
@@ -281,7 +263,27 @@ const Review = () => {
   }
   
   
+  const Item = ({ item }) => {
 
+    return (
+      <MyPaper>
+        <Typography variant="h5" gutterTop component="div">
+          Movie Name:{ item.selectedMovie}
+        </Typography>
+
+        <Typography variant="h6" gutterBottom component="div">
+          Review Title: {item.enteredTitle} 
+        </Typography>
+        <Typography variant="h6" gutterBottom component="div">
+         Rate: {item.selectedRating} 
+        </Typography>
+        <Typography variant="h6" gutterBottom component="div">        
+          Review: {item.enteredReview} 
+        </Typography>
+
+      </MyPaper>
+    )
+  }
 
 
   return (
@@ -297,6 +299,7 @@ const Review = () => {
             <MovieSelection
               onMovieChange={handleMovieSelect}
               selectedMovie={selectedMovie}
+              movies={movies}
               />
             {v0}
           </p>
@@ -321,7 +324,7 @@ const Review = () => {
             {v3}
           </p>
           <p>
-            <Button variant="outlined" color="secondary" onClick= {(event)=> onButtonClick(event)}>
+            <Button variant="outlined" onClick= {(event)=> onButtonClick(event)}>
                   Submit </Button>
           </p>
           <p>
@@ -331,7 +334,7 @@ const Review = () => {
       </Grid>
 
       <Grid>
-      {reviewData.length !=0 &&<List />}
+      {reviewData.length !=0 &&<List list={reviewData}/>}
       </Grid>
 
     </Grid>
@@ -365,13 +368,9 @@ const MovieSelection = ({movies,onMovieChange,selectedMovie }) =>{
                 </MenuItem>
               ) } ) }
           </Select>
-
-          
-
         </FormControl>
       </Box>
-      
-          
+           
      <Typography variant="h6" gutterBottom component="div">
         {"selected movie: "+ selectedMovie }
       </Typography>
@@ -380,8 +379,6 @@ const MovieSelection = ({movies,onMovieChange,selectedMovie }) =>{
     </div>
   )
 }
-
-
 
 
 const ReviewTitle= ({enteredTitle,onReviewTitleChange}) => {
@@ -396,9 +393,6 @@ const ReviewTitle= ({enteredTitle,onReviewTitleChange}) => {
       label="Title"
       value={enteredTitle}
       onChange={onReviewTitleChange} />
-      {/*
-      {"Title: "+enteredTitle}
-      */}
 
     </div>
   )
@@ -423,20 +417,9 @@ const ReviewBody= ({enteredReview,onReviewBodyChange}) => {
       helperText={`${enteredReview.length}/${CHARACTER_LIMIT}`}
       value={enteredReview}
       onChange={onReviewBodyChange} />
-
-      {/*
-
-      {"Review: "+enteredReview}
-
-    */}
-
     </div>
   )
 }
-
-
-
-
 
 const ReviewRating = ({selectedRating, onRatingChange})=>{
 
@@ -463,11 +446,6 @@ const ReviewRating = ({selectedRating, onRatingChange})=>{
 
         </RadioGroup>
       </FormControl> 
-    
-
-      {/*<Typography variant="h6" gutterBottom component="div">
-      {"selected rate: "+selectedRating.getClass().getName()}
-  </Typography>*/}
     </div>
   )
 }

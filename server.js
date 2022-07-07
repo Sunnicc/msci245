@@ -40,8 +40,8 @@ app.post("/api/addReview", (req, res) => {
 
 
 	let connection = mysql.createConnection(config);
-	let sql = "INSERT INTO Review (reviewID, reviewTitle, reviewContent, reviewScore, user_id, movie_id) VALUES (?,?,?,?,?,?)";
-	let data = [req.body.reviewID, req.body.enteredTitle, req.body.enteredReview, req.body.selectedRating, req.body.userID, req.body.selectedMovie];
+	let sql = "INSERT INTO Review (reviewTitle, reviewContent, reviewScore, user_id, movie_id) VALUES (?,?,?,?,?,?)";
+	let data = [req.body.enteredTitle, req.body.enteredReview, req.body.selectedRating, req.body.userID, req.body.selectedMovie];
 	
 	console.log(sql);
 	console.log(data);
