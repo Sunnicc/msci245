@@ -49,6 +49,8 @@ const Design = styled(Paper)(({ theme }) => ({
   padding: 8,
 }));
 
+
+
 const MyPaper = styled(Paper)(({ theme }) => ({
     color: '#212121',
     backgroundColor: '#dcedc8',
@@ -129,15 +131,9 @@ const Review = () => {
     setSelectedMovie(event.target.value);
   };
 
-  /*const getMovieTitle = (id, movies) => {
-    for (let i=0; i<movies.length;i++){
-      if(movies[i].id == id){
-        return movies[i].name;
-      }
-    }
-  }*/
+ 
 
-  /*const getMovieTitle = (id, movies) => {
+  /*const getMovieTitle = (id) => {
     {movies.map(movie => {
       if(movie.id == id)
       return(
@@ -162,31 +158,66 @@ const Review = () => {
   };
   
   const reviewID = reviewData.length +1;
+  const [v0, setV0] = React.useState('');
+  const [v1, setV1] = React.useState('');
+  const [v2, setV2] = React.useState('');
+  const [v3, setV3] = React.useState('');
+  const [v4, setV4] = React.useState('');
   
   
   const onButtonClick = () =>{
-    if(enteredTitle == '') {
-      alert("Please enter your review title")
-    } else if (enteredReview == ''){
-      alert("Please enter your review")
-    } else if (selectedRating == ''){
-      alert( "Please select the rating")
-    } else{
-      alert("Your review has been received");
 
-      
+    if(selectedMovie == '') {
+      setV0("Please select the movie");
+      setV4('');
+    }
+    else{
+      setV0('');
+    }
+    
+    if(enteredTitle == '') {
+      setV1("Please enter the title");
+      setV4('');
+    }
+    else{
+      setV1('');
+    }
+
+    if(enteredReview == '') {
+      setV2("Please write the review");
+      setV4('');
+    } 
+    else{
+      setV2('');
+    }
+
+    if(selectedRating == '') {
+      setV3("Please select the rating");
+      setV4('');
+    } 
+    else{
+      setV3('');
+    }
+    
+    if(selectedMovie!=''&& enteredTitle != '' && enteredReview != '' && selectedRating != '') {
+      setV4("Your review has been received");
+      const reviewID = reviewData.length+1;
       const newList = reviewData.concat({selectedMovie, enteredTitle,enteredReview, selectedRating, reviewID });
       setReviewData(newList);
 
       addReview();
-
+      
       setSelectedMovie('');
       setEnteredTitle('');
       setEnteredReview('');
-      setSelectedRating('');       
-      
-    }
+      setSelectedRating('');
+      setV0('');
+      setV1('');
+      setV2('');
+      setV3('');
+    } 
   };
+
 
   //reviewID, userID, selectedMovie, enteredTitle, enteredReview, selectedRating
 
@@ -230,131 +261,86 @@ const Review = () => {
   const List = ({ list}) => {
     return (
       <>
-        {list.map((item, index) => {
+        {list.map((item) => {
           return (
-            <Item
-              item={item}
-              index={index}
-            />
+            <MyPaper>
+              <Typography variant="h5" gutterTop component="div">
+                Movie Name:{item.selectedMovie}
+              </Typography>
+        
+              <Typography variant="h6" gutterBottom component="div">
+                Review Title: {item.enteredTitle}
+                Review: {item.enteredReview}
+                Rate: {item.selectedRating}
+              </Typography>
+            </MyPaper>
           );
         })}
       </>
-  
     )
   }
   
   
-  const Item = ({ item,  index }) => {
-  
-    return (
-      <MyPaper>
-        <Typography variant="h5" gutterTop component="div">
-          Movie Name:{ item.selectedMovie}
-        </Typography>
-  
-        <Typography variant="h6" gutterBottom component="div">
-          Review Title: {item.enteredTitle}
-        </Typography>
-  
-        <Typography variant="h6" gutterBottom component="div">
-          Review: {item.enteredReview}
-        </Typography>
-  
-        <Typography variant="h6" gutterBottom component="div">
-          Rate: {item.selectedRating}
-        </Typography>
-  
-  
-      </MyPaper>
-    )
-  }
 
 
 
   return (
-    <ThemeProvider theme={theme.primary}>
-      <div>
 
-        <Grid item xs={8}>
-          <Design>
-            <Typography variant="h3" gutterBottom component="div">
-            Review a movie
-            </Typography>
-          </Design>
-        </Grid>
-
-        <Grid item xs={8}>
-          <Design>
-
+    <div>
+    <Grid container direction='column' columnSpacing={2}>
+      <Grid>
+        <Design>
+          <Typography variant="h3" gutterBottom component="div">
+          Review a movie
+          </Typography>
+          <p>
             <MovieSelection
-            onMovieChange={handleMovieSelect}
-            selectedMovie={selectedMovie}
-            movies={movies}
-            />
-
-          </Design>
-        </Grid>
-
-        <Grid item xs={8}>
-          <Design>
-
-          <ReviewTitle
-              onReviewTitleChange={handleTitle}
-              enteredTitle={enteredTitle}
-            />
-            
-          </Design>
-        </Grid>
-        
-        <Grid item xs={8}>
-          <Design>
-
+              onMovieChange={handleMovieSelect}
+              selectedMovie={selectedMovie}
+              />
+            {v0}
+          </p>
+          <p>
+            <ReviewTitle
+                onReviewTitleChange={handleTitle}
+                enteredTitle={enteredTitle}/>
+            {v1}
+          </p>
+          <p>
             <ReviewBody
               onReviewBodyChange={handleReview}
               enteredReview={enteredReview}
             />
-
-          </Design>
-        </Grid>
-
-        <Grid item xs={8}>
-          <Design>
-
-
+            {v2}
+          </p>
+          <p>
             <ReviewRating
               selectedRating= {selectedRating}
               onRatingChange = {handleRating}
             />
+            {v3}
+          </p>
+          <p>
+            <Button variant="outlined" color="secondary" onClick= {(event)=> onButtonClick(event)}>
+                  Submit </Button>
+          </p>
+          <p>
+            {v4}
+          </p>
+        </Design>
+      </Grid>
 
-          </Design>
-        </Grid>
+      <Grid>
+      {reviewData.length !=0 &&<List />}
+      </Grid>
 
+    </Grid>
+  </div>
 
-        <Grid item xs={8}>
-          
-          <Design>
-    
-
-          <Button variant="contained" color= "#dcedc8"
-              onClick= {(event)=> onButtonClick(event)}>
-                Submit
-          </Button>
-
-          </Design>
-        </Grid>
-
-
-        {reviewData.length !=0 &&<List list={reviewData} />}
-
-
-      </div>
-
-    </ThemeProvider>
   );
 }
 
 const MovieSelection = ({movies,onMovieChange,selectedMovie }) =>{
-
   
   return(
     <div>
@@ -377,15 +363,17 @@ const MovieSelection = ({movies,onMovieChange,selectedMovie }) =>{
                 <MenuItem key={movie.id} value={movie.id}>
                   {movie.name}
                 </MenuItem>
-              )})}
-          </Select> 
+              ) } ) }
+          </Select>
+
+          
 
         </FormControl>
       </Box>
       
           
      <Typography variant="h6" gutterBottom component="div">
-        {"selected movie: "+selectedMovie}
+        {"selected movie: "+ selectedMovie }
       </Typography>
       
 
