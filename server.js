@@ -36,24 +36,57 @@ app.post('/api/loadUserSettings', (req, res) => {
 	connection.end();
 });
 
+app.post("/api/addReview", (req, res) => {
+
+
+	let connection = mysql.createConnection(config);
+	let sql = "INSERT INTO Review (reviewID, reviewTitle, reviewContent, reviewScore, user_id, movie_id) VALUES (?,?,?,?,?,?)";
+	let data = [req.body.reviewID, req.body.enteredTitle, req.body.enteredReview, req.body.selectedRating, req.body.userID, req.body.selectedMovie];
+	
+	console.log(sql);
+	console.log(data);
+
+	connection.query(sql, data, (error, results, fields) => {
+		if (error) {
+			console.log("error")
+			return console.error(error.message);
+		}
+		else{
+		res.send("Values Inserted");
+		console.log("success")
+		}
+		
+		connection.end();
+
+	});
+});
+
 
 app.post('/api/getMovies', (req, res) => {
+	
+
 	let connection = mysql.createConnection(config);
 
-	let sql = `SELECT id, name, year, quality FROM movies`;
-	console.log(sql);
+	let sql = `SELECT * FROM movies`;
+	let data = [];
 
-	connection.query(sql, (error, results, fields) => {
+	
+	console.log(sql);
+	console.log(data);
+
+	connection.query(sql, data, (error, results, fields) => {
 		if (error) {
 			return console.error(error.message);
 		}
+
 		console.log(results);
 		let string = JSON.stringify(results);
 		let obj = JSON.parse(string);
 		res.send({ express: string });
 	});
 	connection.end();
-
 });
+
+
 app.listen(port, () => console.log(`Listening on port ${port}`)); //for the dev version
 //app.listen(port, '129.97.25.211'); //for the deployed version, specify the IP address of the server

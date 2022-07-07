@@ -18,7 +18,9 @@ import Button from '@material-ui/core/Button';
 import InputLabel from '@mui/material/InputLabel';
 
 
-const serverURL = "http://ov-research-4.uwaterloo.ca:3105";
+//const serverURL = "http://ov-research-4.uwaterloo.ca:3105";
+const serverURL = "";
+
 
 const opacityValue = 0.9;
 
@@ -64,7 +66,7 @@ const Review = () => {
       .then(res => {
         //console.log("loadUserSettings returned: ", res)
         var parsed = JSON.parse(res.express);
-        console.log("loadUserSettings parsed: ", parsed[0])
+        console.log("loadUserSettings parsed: ", parsed)
         setMode( parsed[0]);
       });
   }
@@ -88,31 +90,12 @@ const Review = () => {
     return body;
   }
 
-  const initialReviews = [ ];
-  const [reviewData, setReviewData] = React.useState(initialReviews);
-
-  const Movies =[
-    {
-      id:'1',
-      name:"hi"
-    },
-    {
-      id:'2',
-      name:"hello"
-    },
-    {
-      id:'3',
-      name:"bye"
-    },
-    {
-      id:'4',
-      name:"goodnight"
-    }
-  ];
-
+  const [reviewData, setReviewData] = React.useState([]);
   const [movies, setMovies] =  React.useState([]);
 
-  React.useEffect(() => { getMovies(); }, []);
+  React.useEffect(() => {  
+    getMovies(); 
+  }, []);
 
   const getMovies = () => {
       callApiGetMovies()
@@ -146,6 +129,23 @@ const Review = () => {
     setSelectedMovie(event.target.value);
   };
 
+  /*const getMovieTitle = (id, movies) => {
+    for (let i=0; i<movies.length;i++){
+      if(movies[i].id == id){
+        return movies[i].name;
+      }
+    }
+  }*/
+
+  /*const getMovieTitle = (id, movies) => {
+    {movies.map(movie => {
+      if(movie.id == id)
+      return(
+        movie.name
+      )})}
+  }*/
+
+
   const [enteredTitle, setEnteredTitle] = React.useState('');
   const handleTitle = (event) => {
     setEnteredTitle(event.target.value);
@@ -161,6 +161,9 @@ const Review = () => {
     setSelectedRating(event.target.value);
   };
   
+  const reviewID = reviewData.length +1;
+  
+  
   const onButtonClick = () =>{
     if(enteredTitle == '') {
       alert("Please enter your review title")
@@ -171,19 +174,58 @@ const Review = () => {
     } else{
       alert("Your review has been received");
 
-      const reviewID = reviewData.length+1;
+      
       const newList = reviewData.concat({selectedMovie, enteredTitle,enteredReview, selectedRating, reviewID });
       setReviewData(newList);
 
-      setReviewData(newList);
+      addReview();
+
       setSelectedMovie('');
       setEnteredTitle('');
       setEnteredReview('');
-      setSelectedRating('');
-       
+      setSelectedRating('');       
       
     }
   };
+
+  //reviewID, userID, selectedMovie, enteredTitle, enteredReview, selectedRating
+
+ const addReview = () => {
+    callApiAddReview()
+      .then(res => {
+        console.log("callApiAddReview returned: ", res)
+        var parsed = JSON.parse(res.express);
+        console.log("callApiAddReview parsed: ", parsed[0]);
+      })
+  }
+
+  const callApiAddReview = async () => {
+    const url = serverURL + "/api/addReview";
+    console.log(url);
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        //authorization: `Bearer ${this.state.token}`
+      },
+      body: JSON.stringify({
+        reviewID: reviewID,
+        userID: userID,
+        selectedMovie: selectedMovie,
+        enteredTitle: enteredTitle,
+        enteredReview: enteredReview,
+        selectedRating: selectedRating,
+      })
+    });
+
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    console.log("User settings: ", body);
+    return body;
+  }
+
+
 
   const List = ({ list}) => {
     return (
@@ -207,7 +249,7 @@ const Review = () => {
     return (
       <MyPaper>
         <Typography variant="h5" gutterTop component="div">
-          Movie Name:{item.selectedMovie}
+          Movie Name:{ item.selectedMovie}
         </Typography>
   
         <Typography variant="h6" gutterBottom component="div">
@@ -311,6 +353,46 @@ const Review = () => {
   );
 }
 
+const MovieSelection = ({movies,onMovieChange,selectedMovie }) =>{
+
+  
+  return(
+    <div>
+      <Typography variant="h5" gutterBottom component="div">
+          Select a movie
+      </Typography>
+
+      <Box >
+        <FormControl sx={{ m: 1, minWidth: 120 }}>
+          
+          <Select
+              labelId="demo-simple-select-autowidth-label"
+              id="demo-simple-select-autowidth"
+              value={selectedMovie}
+              onChange={onMovieChange}
+              autoWidth
+              label = "Movie">
+                {movies.map(movie => {
+              return(
+                <MenuItem key={movie.id} value={movie.id}>
+                  {movie.name}
+                </MenuItem>
+              )})}
+          </Select> 
+
+        </FormControl>
+      </Box>
+      
+          
+     <Typography variant="h6" gutterBottom component="div">
+        {"selected movie: "+selectedMovie}
+      </Typography>
+      
+
+    </div>
+  )
+}
+
 
 
 
@@ -364,43 +446,7 @@ const ReviewBody= ({enteredReview,onReviewBodyChange}) => {
   )
 }
 
-const MovieSelection = ({movies,onMovieChange,selectedMovie }) =>{
-  return(
-    <div>
-      <Typography variant="h5" gutterBottom component="div">
-          Select a movie
-      </Typography>
 
-      <Box >
-        <FormControl sx={{ m: 1, minWidth: 120 }}>
-          
-          <Select
-              labelId="demo-simple-select-autowidth-label"
-              id="demo-simple-select-autowidth"
-              value={selectedMovie}
-              onChange={onMovieChange}
-              autoWidth
-              label = "Movie">
-                {movies.map(movie => {
-              return(
-                <MenuItem key={movie.id} value={movie.id}>
-                  {movie.name}
-                </MenuItem>
-              )})}
-          </Select> 
-
-        </FormControl>
-      </Box>
-      
-           {/*
-      <Typography variant="h7" gutterBottom component="div">
-        {"selected movie: "+selectedMovie}
-  </Typography>*/}
-      
-
-    </div>
-  )
-}
 
 
 
@@ -421,19 +467,18 @@ const ReviewRating = ({selectedRating, onRatingChange})=>{
           value={selectedRating}
           onChange={onRatingChange}>
 
-            <FormControlLabel value ='1' control={<Radio />} label="1" labelPlacement="top" />
-            <FormControlLabel value ='2' control={<Radio />} label="2" labelPlacement="top" />
-            <FormControlLabel value ='3'control={<Radio />} label="3" labelPlacement="top"/>
-            <FormControlLabel value ='4'control={<Radio />} label="4" labelPlacement="top"/>
-            <FormControlLabel value ='5'control={<Radio />} label="5" labelPlacement="top" />
+            <FormControlLabel value = {1} control={<Radio />} label="1" labelPlacement="top" />
+            <FormControlLabel value = {2} control={<Radio />} label="2" labelPlacement="top" />
+            <FormControlLabel value = {3} control={<Radio />} label="3" labelPlacement="top"/>
+            <FormControlLabel value = {4} control={<Radio />} label="4" labelPlacement="top"/>
+            <FormControlLabel value = {5} control={<Radio />} label="5" labelPlacement="top" />
 
         </RadioGroup>
       </FormControl> 
+    
 
-      {/*
-
-      <Typography variant="h7" gutterBottom component="div">
-      {"selected rate: "+selectedRating}
+      {/*<Typography variant="h6" gutterBottom component="div">
+      {"selected rate: "+selectedRating.getClass().getName()}
   </Typography>*/}
     </div>
   )
