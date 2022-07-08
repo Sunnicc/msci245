@@ -13,7 +13,7 @@ import Button from '@material-ui/core/Button';
 
 //const serverURL = "http://ov-research-4.uwaterloo.ca:3105";
 //const serverURL = "";
-const serverURL = "http://ec2-18-188-101-79.us-east-2.compute.amazonaws.com:PORT";
+const serverURL = "http://ec2-18-188-101-79.us-east-2.compute.amazonaws.com:3306";
 const opacityValue = 0.9;
 
 
