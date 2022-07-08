@@ -1,44 +1,21 @@
 import * as React from 'react';
-//import Button from '@material-ui/core/Button';
-//import TextField from '@material-ui/core/TextField';
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import { createTheme, ThemeProvider, styled } from '@material-ui/core/styles';
-import purple from '@material-ui/core/colors/purple';
-
+import { createTheme, styled } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-
 import { FormControl, Radio, RadioGroup, FormControlLabel,FormLabel  } from '@mui/material';
 import Grid from '@mui/material/Grid';
-
 import Box from '@mui/material/Box';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import InputLabel from '@mui/material/InputLabel';
 
 
 //const serverURL = "http://ov-research-4.uwaterloo.ca:3105";
-const serverURL = "";
-
-
+//const serverURL = "";
+const serverURL = "http://ec2-18-188-101-79.us-east-2.compute.amazonaws.com:PORT";
 const opacityValue = 0.9;
 
-const theme = createTheme({
-    status: {
-      danger: '#e53e3e',
-    },
-    palette: {
-      primary: {
-        main: '#dcedc8',
-        darker: '#9aa58c',
-      },
-      neutral: {
-        main: '#81c784',
-        contrastText: '#5a8b5c',
-      },
-    },
-});
 
 const Design = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -51,45 +28,13 @@ const MyPaper = styled(Paper)(({ theme }) => ({
     color: '#212121',
     backgroundColor: '#dcedc8',
     padding: 8,
-    textAlign: 'center',
     borderRadius: 4,
   }));
 
 const Review = () => {
 
   const [userID,setUserID]= React.useState(1);
-  const [mode,setMode]= React.useState(0);
-
-  const loadUserSettings=(userID)=> {
-    callApiLoadUserSettings(userID)
-      .then(res => {
-        //console.log("loadUserSettings returned: ", res)
-        var parsed = JSON.parse(res.express);
-        console.log("loadUserSettings parsed: ", parsed)
-        setMode( parsed[0]);
-      });
-  }
-
-  const callApiLoadUserSettings = async (userID) => {
-    const url = serverURL + "/api/loadUserSettings";
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        //authorization: `Bearer ${this.state.token}`
-      },
-      body: JSON.stringify({
-        userID: userID
-      })
-    });
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    console.log("User settings: ", body);
-    return body;
-  }
-
-  const [reviewData, setReviewData] = React.useState([]);
+ 
   const [movies, setMovies] =  React.useState([]);
 
   React.useEffect(() => {  
@@ -128,15 +73,22 @@ const Review = () => {
     setSelectedMovie(event.target.value);
   };
 
- 
 
-  /*const getMovieTitle = (id) => {
-    {movies.map(movie => {
-      if(movie.id == id)
-      return(
-        movie.name
-      )})}
-  }*/
+  //console.log('-------------------------------------');
+
+  const [reviewData, setReviewData] = React.useState([]);
+
+  console.log('-------------------------------------');
+
+
+/*for (let i=0; i<Object.keys(reviewData).length; i++){
+    return (
+      console.log(reviewData[Object.keys(reviewData)[i]].ReviewTitle)
+      );
+  
+}*/
+ 
+  
 
 
   const [enteredTitle, setEnteredTitle] = React.useState('');
@@ -153,7 +105,7 @@ const Review = () => {
   const handleRating = (event) => {
     setSelectedRating(event.target.value);
   };
-  
+
 
   const [v0, setV0] = React.useState('');
   const [v1, setV1] = React.useState('');
@@ -161,14 +113,12 @@ const Review = () => {
   const [v3, setV3] = React.useState('');
   const [v4, setV4] = React.useState('');
 
-  
-  const onButtonClick = () =>{
 
+  const onButtonClick = () =>{
     if(selectedMovie == '') {
       setV0("Please select the movie");
       setV4('');
-    }
-    else{ setV0(''); }
+    } else{ setV0(''); }
     
     if(enteredTitle == '') {
       setV1("Please enter the title");
@@ -179,25 +129,22 @@ const Review = () => {
     if(enteredReview == '') {
       setV2("Please write the review");
       setV4('');
-    } 
-    else{ setV2(''); }
+    }  else{ setV2(''); }
 
     if(selectedRating == '') {
       setV3("Please select the rating");
       setV4('');
     } 
     else{ setV3(''); }
-    
+
     if(selectedMovie!=''&& enteredTitle != '' && enteredReview != '' && selectedRating != '') {
       setV4("Your review has been received");
-      
-      const newList = reviewData.concat({selectedMovie, enteredTitle,enteredReview, selectedRating, reviewID });
+
+      const newList = reviewData.concat({selectedMovie, enteredTitle,enteredReview, selectedRating });
       setReviewData(newList);
 
-      const reviewID = reviewData.length+1;
-
       addReview();
-      
+
       setSelectedMovie('');
       setEnteredTitle('');
       setEnteredReview('');
@@ -205,12 +152,10 @@ const Review = () => {
       setV0('');
       setV1('');
       setV2('');
-      setV3('');
-    } 
+      setV3('');       
+      
+    }
   };
-
-
-  //reviewID, userID, selectedMovie, enteredTitle, enteredReview, selectedRating
 
  const addReview = () => {
     callApiAddReview()
@@ -248,103 +193,169 @@ const Review = () => {
 
 
 
+  const getMovieName = (id) => {
+    for (let i=0; i<Object.keys(movies).length; i++){
+      if(movies[Object.keys(movies)[i]].id === id){
+        return (
+          movies[Object.keys(movies)[i]].name
+          );
+      }
+    }
+  };
+
+ 
   const List = ({ list}) => {
+
     return (
       <>
-        {list.map((item) => {
+        {list.map((item, index) => {
           return (
-            <Item
+            <Item 
               item={item}
+              index={index}
             />
           );
         })}
       </>
+  
     )
   }
   
   
-  const Item = ({ item }) => {
-
+  const Item = ({ item,  index }) => {
+  
     return (
       <MyPaper>
-        <Typography variant="h5" gutterTop component="div">
-          Movie Name:{ item.selectedMovie}
+        <Typography variant="h5" gutterBottom component="div">
+          Movie Name:{ getMovieName(item.selectedMovie)}
         </Typography>
-
+  
         <Typography variant="h6" gutterBottom component="div">
-          Review Title: {item.enteredTitle} 
+          Review Title: {item.enteredTitle}
         </Typography>
+  
         <Typography variant="h6" gutterBottom component="div">
-         Rate: {item.selectedRating} 
+          Review: {item.enteredReview}
         </Typography>
-        <Typography variant="h6" gutterBottom component="div">        
-          Review: {item.enteredReview} 
+  
+        <Typography variant="h6" gutterBottom component="div">
+          Rate: {item.selectedRating}
         </Typography>
-
+  
+  
       </MyPaper>
     )
   }
 
 
+
   return (
 
-    <div>
-    <Grid container direction='column' columnSpacing={2}>
-      <Grid>
-        <Design>
-          <Typography variant="h3" gutterBottom component="div">
-          Review a movie
-          </Typography>
-          <p>
+      <div>
+
+        <Grid item xs={8}>
+          <Design>
+            <Typography variant="h3" gutterBottom component="div">
+            Review a movie
+            </Typography>
+          </Design>
+        </Grid>
+
+        <Grid item xs={8} >
+          <Design>
+
             <MovieSelection
-              onMovieChange={handleMovieSelect}
-              selectedMovie={selectedMovie}
-              movies={movies}
-              />
+            onMovieChange={handleMovieSelect}
+            selectedMovie={selectedMovie}
+            movies={movies}
+            />
+
+
+          </Design>
+        </Grid>
+
+        <Grid item xs={8} height="100%">
+          <Design>
             {v0}
-          </p>
-          <p>
-            <ReviewTitle
-                onReviewTitleChange={handleTitle}
-                enteredTitle={enteredTitle}/>
+          </Design>
+        </Grid>
+
+
+
+        <Grid item xs={8}>
+          <Design>
+
+          <ReviewTitle
+              onReviewTitleChange={handleTitle}
+              enteredTitle={enteredTitle}
+            />            
+          </Design>
+        </Grid>
+
+        <Grid item xs={8} height="100%">
+          <Design>
             {v1}
-          </p>
-          <p>
+          </Design>
+        </Grid>
+        
+        <Grid item xs={8}>
+          <Design>
+
             <ReviewBody
               onReviewBodyChange={handleReview}
               enteredReview={enteredReview}
             />
+
+          </Design>
+        </Grid>
+
+        <Grid item xs={8} height="100%">
+          <Design>
             {v2}
-          </p>
-          <p>
+          </Design>
+        </Grid>
+
+        <Grid item xs={8}>
+          <Design>
+
+
             <ReviewRating
               selectedRating= {selectedRating}
               onRatingChange = {handleRating}
             />
+          </Design>
+        </Grid>
+
+        <Grid item xs={8} height="100%">
+          <Design>
             {v3}
-          </p>
-          <p>
+          </Design>
+        </Grid>
+
+
+        <Grid item xs={8}> 
+          <Design>
             <Button variant="outlined" onClick= {(event)=> onButtonClick(event)}>
-                  Submit </Button>
-          </p>
-          <p>
-            {v4}
-          </p>
-        </Design>
-      </Grid>
+                  Submit
+            </Button>
+          </Design>
+        </Grid>
 
-      <Grid>
-      {reviewData.length !=0 &&<List list={reviewData}/>}
-      </Grid>
+        <Grid item xs={8}>
+          <Design>
+          {v4}
+          </Design>
+        </Grid>
 
-    </Grid>
-  </div>
+        {reviewData.length !=0 &&<List list={reviewData} />}
+
+      </div>
 
   );
 }
 
 const MovieSelection = ({movies,onMovieChange,selectedMovie }) =>{
-  
+
   return(
     <div>
       <Typography variant="h5" gutterBottom component="div">
@@ -366,19 +377,21 @@ const MovieSelection = ({movies,onMovieChange,selectedMovie }) =>{
                 <MenuItem key={movie.id} value={movie.id}>
                   {movie.name}
                 </MenuItem>
-              ) } ) }
-          </Select>
+              )})}
+          </Select> 
+
         </FormControl>
       </Box>
-           
-     <Typography variant="h6" gutterBottom component="div">
-        {"selected movie: "+ selectedMovie }
-      </Typography>
-      
 
+     {/*<Typography variant="h6" gutterBottom component="div">
+        {"selected movie: "+ selectedMovie}
+      </Typography>*/}
+      
     </div>
   )
 }
+
+
 
 
 const ReviewTitle= ({enteredTitle,onReviewTitleChange}) => {
@@ -393,6 +406,9 @@ const ReviewTitle= ({enteredTitle,onReviewTitleChange}) => {
       label="Title"
       value={enteredTitle}
       onChange={onReviewTitleChange} />
+      {/*
+      {"Title: "+enteredTitle}
+      */}
 
     </div>
   )
@@ -417,9 +433,17 @@ const ReviewBody= ({enteredReview,onReviewBodyChange}) => {
       helperText={`${enteredReview.length}/${CHARACTER_LIMIT}`}
       value={enteredReview}
       onChange={onReviewBodyChange} />
+
+      {/*
+
+      {"Review: "+enteredReview}
+
+    */}
+
     </div>
   )
 }
+
 
 const ReviewRating = ({selectedRating, onRatingChange})=>{
 
@@ -446,6 +470,11 @@ const ReviewRating = ({selectedRating, onRatingChange})=>{
 
         </RadioGroup>
       </FormControl> 
+    
+
+      {/*<Typography variant="h6" gutterBottom component="div">
+      {"selected rate: "+selectedRating.getClass().getName()}
+  </Typography>*/}
     </div>
   )
 }
