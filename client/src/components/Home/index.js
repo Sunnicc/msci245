@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import { createTheme, styled } from '@material-ui/core/styles';
+import { styled } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { FormControl, Radio, RadioGroup, FormControlLabel,FormLabel  } from '@mui/material';
@@ -14,7 +14,7 @@ import Button from '@material-ui/core/Button';
 //const serverURL = "http://ov-research-4.uwaterloo.ca:3105";
 //const serverURL = "";
 const serverURL = "http://ec2-18-188-101-79.us-east-2.compute.amazonaws.com:3105";
-const opacityValue = 0.9;
+//const opacityValue = 0.9;
 
 
 const Design = styled(Paper)(({ theme }) => ({
@@ -41,7 +41,7 @@ const Review = () => {
     getMovies(); 
   }, []);
 
-  const getMovies = () => {
+  const getMovies = ( ) => {
       callApiGetMovies()
         .then(res => {
           console.log("callApiGetMovies returned: ", res)
@@ -74,22 +74,9 @@ const Review = () => {
   };
 
 
-  //console.log('-------------------------------------');
-
   const [reviewData, setReviewData] = React.useState([]);
 
   console.log('-------------------------------------');
-
-
-/*for (let i=0; i<Object.keys(reviewData).length; i++){
-    return (
-      console.log(reviewData[Object.keys(reviewData)[i]].ReviewTitle)
-      );
-  
-}*/
- 
-  
-
 
   const [enteredTitle, setEnteredTitle] = React.useState('');
   const handleTitle = (event) => {
@@ -115,35 +102,36 @@ const Review = () => {
 
 
   const onButtonClick = () =>{
-    if(selectedMovie == '') {
+    if(selectedMovie === '') {
       setV0("Please select the movie");
       setV4('');
     } else{ setV0(''); }
     
-    if(enteredTitle == '') {
+    if(enteredTitle === '') {
       setV1("Please enter the title");
       setV4('');
     }
     else{ setV1(''); }
 
-    if(enteredReview == '') {
+    if(enteredReview === '') {
       setV2("Please write the review");
       setV4('');
     }  else{ setV2(''); }
 
-    if(selectedRating == '') {
+    if(selectedRating === '') {
       setV3("Please select the rating");
       setV4('');
     } 
     else{ setV3(''); }
 
-    if(selectedMovie!=''&& enteredTitle != '' && enteredReview != '' && selectedRating != '') {
+    if(selectedMovie!==''&& enteredTitle !== '' && enteredReview !== '' && selectedRating !== '') {
       setV4("Your review has been received");
 
       const newList = reviewData.concat({selectedMovie, enteredTitle,enteredReview, selectedRating });
       setReviewData(newList);
+      
 
-      addReview();
+      addReview(  );
 
       setSelectedMovie('');
       setEnteredTitle('');
@@ -157,8 +145,8 @@ const Review = () => {
     }
   };
 
- const addReview = (userID, selectedMovie, enteredTitle, enteredReview, selectedRating) => {
-    callApiAddReview(userID, selectedMovie, enteredTitle, enteredReview, selectedRating)
+ const addReview = (  ) => {
+    callApiAddReview(  )
       .then(res => {
         console.log("callApiAddReview returned: ", res)
         var parsed = JSON.parse(res.express);
@@ -166,10 +154,10 @@ const Review = () => {
       })
   }
 
-  const callApiAddReview = async (userID, selectedMovie, enteredTitle, enteredReview, selectedRating) => {
+  const callApiAddReview = async ( ) => {
     const url = serverURL + "/api/addReview";
     console.log(url);
-    console.log(userID, selectedMovie, enteredTitle, enteredReview, selectedRating);
+    console.log( "api add review section");
 
     const response = await fetch(url, {
       method: "POST",
@@ -213,6 +201,7 @@ const Review = () => {
         {list.map((item, index) => {
           return (
             <Item 
+              key={index}
               item={item}
               index={index}
             />
@@ -349,7 +338,7 @@ const Review = () => {
           </Design>
         </Grid>
 
-        {reviewData.length !=0 &&<List list={reviewData} />}
+        {reviewData.length !==0 &&<List list={reviewData} />}
 
       </div>
 
