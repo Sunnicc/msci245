@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 
 const { response } = require('express');
 const app = express();
-const port = process.env.PORT || 3306;
+const port = process.env.PORT || 5000;
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
@@ -40,7 +40,7 @@ app.post("/api/addReview", (req, res) => {
 
 
 	let connection = mysql.createConnection(config);
-	let sql = "INSERT INTO Review (reviewTitle, reviewContent, reviewScore, user_id, movie_id) VALUES (?,?,?,?,?,?)";
+	let sql = "INSERT INTO Review (reviewTitle, reviewContent, reviewScore, user_id, movie_id) VALUES (?,?,?,?,?)";
 	let data = [req.body.enteredTitle, req.body.enteredReview, req.body.selectedRating, req.body.userID, req.body.selectedMovie];
 	
 	console.log(sql);
@@ -88,6 +88,6 @@ app.post('/api/getMovies', (req, res) => {
 });
 
 
-//app.listen(port, () => console.log(`Listening on port ${port}`)); //for the dev version
+app.listen(port, () => console.log(`Listening on port ${port}`)); //for the dev version
 //app.listen(port, '129.97.25.211'); //for the deployed version, specify the IP address of the server
-app.listen(port, '172.31.31.77');
+//app.listen(port, '172.31.31.77');
