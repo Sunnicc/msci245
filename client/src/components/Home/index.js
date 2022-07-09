@@ -157,8 +157,8 @@ const Review = () => {
     }
   };
 
- const addReview = () => {
-    callApiAddReview()
+ const addReview = (userID, selectedMovie, enteredTitle, enteredReview, selectedRating) => {
+    callApiAddReview(userID, selectedMovie, enteredTitle, enteredReview, selectedRating)
       .then(res => {
         console.log("callApiAddReview returned: ", res)
         var parsed = JSON.parse(res.express);
@@ -166,9 +166,10 @@ const Review = () => {
       })
   }
 
-  const callApiAddReview = async () => {
+  const callApiAddReview = async (userID, selectedMovie, enteredTitle, enteredReview, selectedRating) => {
     const url = serverURL + "/api/addReview";
     console.log(url);
+    console.log(userID, selectedMovie, enteredTitle, enteredReview, selectedRating);
 
     const response = await fetch(url, {
       method: "POST",
