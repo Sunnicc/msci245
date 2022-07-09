@@ -194,10 +194,11 @@ const Review = () => {
 
 
   const getMovieName = (id) => {
-    for (let i=0; i<Object.keys(movies).length; i++){
-      if(movies[Object.keys(movies)[i]].id === id){
+    const movieList = [...movies];
+    for (let i=0; i<Object.keys(movieList).length; i++){
+      if(movieList[Object.keys(movieList)[i]].id === id){
         return (
-          movies[Object.keys(movies)[i]].name
+          movieList[Object.keys(movieList)[i]].name
           );
       }
     }
