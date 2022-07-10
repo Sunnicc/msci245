@@ -13,7 +13,7 @@ import Button from '@material-ui/core/Button';
 
 //const serverURL = "http://ov-research-4.uwaterloo.ca:3105";
 //const serverURL = "";
-const serverURL = "http://ec2-18-188-101-79.us-east-2.compute.amazonaws.com:3105";
+const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3105";
 //const opacityValue = 0.9;
 
 
@@ -150,7 +150,7 @@ const Review = () => {
       .then(res => {
         console.log("callApiAddReview returned: ", res)
         var parsed = JSON.parse(res.express);
-        console.log("callApiAddReview parsed: ", parsed[0]);
+        console.log("callApiAddReview parsed: ", parsed);
       })
   }
 
