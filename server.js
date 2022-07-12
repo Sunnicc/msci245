@@ -36,6 +36,32 @@ app.post('/api/loadUserSettings', (req, res) => {
 	connection.end();
 });
 
+/*app.post("/api/addReview", (req, res) => {
+
+
+	let connection = mysql.createConnection(config);
+	let sql = "INSERT INTO Review (reviewTitle, reviewContent, reviewScore, user_id, movie_id) VALUES (?,?,?,?,?)";
+	let data = [req.body.reviewTitle, req.body.reviewContent, req.body.reviewScore, req.body.user_id, req.body.movie_id];
+	
+	console.log(sql);
+	console.log(data);
+
+	connection.query(sql, data, (error, results, fields) => {
+		if (error) {
+			console.log("error")
+			return console.error(error.message);
+		}
+		else{
+		res.send("Values Inserted");
+		console.log("success")
+		}
+		
+		connection.end();
+
+	});
+});*/
+
+
 app.post("/api/addReview", (req, res) => {
 
 
@@ -52,7 +78,12 @@ app.post("/api/addReview", (req, res) => {
 			return console.error(error.message);
 		}
 		else{
-		res.send("Values Inserted");
+
+		console.log(results);
+		let string = JSON.stringify(results);
+		let obj = JSON.parse(string);
+		res.send({ express: string });
+		/*res.send("Values Inserted");*/
 		console.log("success")
 		}
 		
