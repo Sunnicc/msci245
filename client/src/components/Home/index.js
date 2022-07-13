@@ -4,9 +4,15 @@ import Paper from "@material-ui/core/Paper";
 import { styled } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import { FormControl, Radio, RadioGroup, FormControlLabel,FormLabel  } from '@mui/material';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
+
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+
+import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
@@ -103,15 +109,14 @@ const Review = () => {
 
   const onButtonClick = () =>{
     if(selectedMovie === '') {
-      setV0("Please select the movie");
+      setV0("Please select the movie"); 
       setV4('');
     } else{ setV0(''); }
     
     if(enteredTitle === '') {
       setV1("Please enter the title");
       setV4('');
-    }
-    else{ setV1(''); }
+    }     else{ setV1(''); }
 
     if(enteredReview === '') {
       setV2("Please write the review");
@@ -176,7 +181,7 @@ const Review = () => {
 
     const body = await response.json();
     if (response.status !== 200) throw Error(body.message);
-    console.log("User settings: ", body);
+    console.log("complete: ", body);
     return body;
   }
 
@@ -322,7 +327,7 @@ const Review = () => {
             {v3}
           </Design>
         </Grid>
-
+  
 
         <Grid item xs={8}> 
           <Design>
@@ -453,11 +458,11 @@ const ReviewRating = ({selectedRating, onRatingChange})=>{
           value={selectedRating}
           onChange={onRatingChange}>
 
-            <FormControlLabel value = {1} control={<Radio />} label="1" labelPlacement="top" />
-            <FormControlLabel value = {2} control={<Radio />} label="2" labelPlacement="top" />
-            <FormControlLabel value = {3} control={<Radio />} label="3" labelPlacement="top"/>
-            <FormControlLabel value = {4} control={<Radio />} label="4" labelPlacement="top"/>
-            <FormControlLabel value = {5} control={<Radio />} label="5" labelPlacement="top" />
+            <FormControlLabel value = "1" control={<Radio />} label="1" labelPlacement="top" />
+            <FormControlLabel value = "2" control={<Radio />} label="2" labelPlacement="top" />
+            <FormControlLabel value = "3" control={<Radio />} label="3" labelPlacement="top"/>
+            <FormControlLabel value = "4" control={<Radio />} label="4" labelPlacement="top"/>
+            <FormControlLabel value = "5" control={<Radio />} label="5" labelPlacement="top" />
 
         </RadioGroup>
       </FormControl> 
